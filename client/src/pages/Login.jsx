@@ -15,13 +15,12 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleLogin = async (loginEmail, loginPassword) => {
     setError('');
     setLoading(true);
 
     try {
-      const res = await api.post('/auth/login', { email, password });
+      const res = await api.post('/auth/login', { email: loginEmail, password: loginPassword });
       const { user, token } = res.data;
       dispatch(setCredentials({ user, token }));
 
@@ -42,6 +41,17 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleLogin(email, password);
+  };
+
+  const handleDemoClick = (demoEmail, demoPassword) => {
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+    handleLogin(demoEmail, demoPassword);
   };
 
   return (
@@ -106,6 +116,50 @@ const Login = () => {
                     )}
                   </Button>
                 </Form>
+
+                {/* Quick Demo Access Buttons */}
+                <div className="pt-3 border-top mb-3">
+                  <div className="text-center mb-2">
+                    <span className="text-muted small fw-semibold" style={{ fontSize: '0.78rem' }}>
+                      ⚡ Quick Demo Login:
+                    </span>
+                  </div>
+                  <div className="d-flex gap-2 mb-2">
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      className="flex-fill py-1 fw-semibold"
+                      style={{ fontSize: '0.75rem' }}
+                      disabled={loading}
+                      onClick={() => handleDemoClick('hr@modernhr.com', 'Password@123')}
+                    >
+                      Demo HR
+                    </Button>
+                    <Button
+                      variant="outline-success"
+                      size="sm"
+                      className="flex-fill py-1 fw-semibold"
+                      style={{ fontSize: '0.75rem' }}
+                      disabled={loading}
+                      onClick={() => handleDemoClick('manager1@modernhr.com', 'Password@123')}
+                    >
+                      Demo Manager
+                    </Button>
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      className="flex-fill py-1 fw-semibold"
+                      style={{ fontSize: '0.75rem' }}
+                      disabled={loading}
+                      onClick={() => handleDemoClick('emp1@modernhr.com', 'Password@123')}
+                    >
+                      Demo Employee
+                    </Button>
+                  </div>
+                  <p className="text-muted text-center mb-0" style={{ fontSize: '0.72rem', lineHeight: '1.4' }}>
+                    * Demo links are strictly for showcase and demonstration purposes.
+                  </p>
+                </div>
 
                 <div className="text-center small text-muted pt-2 border-top">
                   Need a staff account?{' '}
